@@ -93,7 +93,7 @@ authRouter.get("/facebook", (req, res, next) => {
 
 authRouter.get(
   "/facebook/callback",
-  passport.authenticate("facebook", { session: false, failureRedirect: "https://germanguestpost.com/en/sign-up" }),
+  passport.authenticate("facebook", { session: false, failureRedirect: "http://localhost:3000/en/sign-up" }),
   async (req, res) => {
     const user = req.user as User;
 
@@ -123,7 +123,7 @@ authRouter.get(
 
 authRouter.get(
   "/twitter/callback",
-  passport.authenticate("twitter", { session: false, failureRedirect: "https://germanguestpost.com/en/sign-up" }),
+  passport.authenticate("twitter", { session: false, failureRedirect: "http://localhost:3000/en/sign-up" }),
   async (req, res) => {
     const user = req.user as User;
     const token = generateJWT(user.email, process.env.JWT_SECRET!, "24h");
