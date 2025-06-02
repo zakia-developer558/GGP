@@ -68,8 +68,8 @@ passport.use(
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       callbackURL:
         process.env.NODE_ENV === "production"
-          ? "http://localhost:6543/v1/auth/google/callback"
-          : "http://localhost:6543/v1/auth/google/callback",
+          ? "http://localhost:3000/v1/auth/google/callback"
+          : "http://localhost:3000/v1/auth/google/callback",
       passReqToCallback: true,
     },
     async (req, _accessToken, _refreshToken, profile, done) => {
