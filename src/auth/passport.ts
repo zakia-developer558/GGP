@@ -25,7 +25,7 @@ passport.use(
       callbackURL:
         process.env.NODE_ENV === "production"
           ? "https://ggp-production.up.railway.app/v1/auth/facebook/callback"
-          : "http://localhost:8080/v1/auth/facebook/callback",
+          : "http://localhost:6543/v1/auth/facebook/callback",
       profileFields: ["id", "emails", "name", "displayName"],
       passReqToCallback: true,
     },
@@ -68,8 +68,8 @@ passport.use(
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       callbackURL:
         process.env.NODE_ENV === "production"
-          ? "https://ggp-production.up.railway.app/v1/auth/google/callback"
-          : "http://localhost:8080/v1/auth/google/callback",
+          ? "http://localhost:6543/v1/auth/google/callback"
+          : "http://localhost:6543/v1/auth/google/callback",
       passReqToCallback: true,
     },
     async (req, _accessToken, _refreshToken, profile, done) => {
