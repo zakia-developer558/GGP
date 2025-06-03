@@ -283,6 +283,7 @@ export const getAllProductsUser = async (query: any) => {
     "dr-low-to-high": { domainRatings: "ASC" },
     "dr-high-to-low": { domainRatings: "DESC" },
     "monthly-traffic-high-to-low": { monthlyTraffic: "DESC" },
+    "monthly-traffic-low-to-high":{monthlyTraffic: "ASC" }
   };
 
   const sort = sortOptions[query.sort] || { createdAt: "DESC" }; // Default to 'Newest'
