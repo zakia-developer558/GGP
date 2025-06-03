@@ -98,14 +98,24 @@ authRouter.get(
   passport.authenticate("facebook", { session: false, failureRedirect: "http://localhost:3000/en/sign-up" }),
   async (req, res) => {
     const user = req.user as User;
+     const payload = {
+      userId: user.id,
+      email:user.email, // assuming your User has an id
+      role: user.role,
+      permissions: user.permissions  // add actual permissions if you have them
+    };
 
-    const token = generateJWT(user.email, process.env.JWT_SECRET!, "24h");
+    const token = generateJWT(payload, process.env.JWT_SECRET!, "24h");
+    const userId = user.id;
+
     const queryParams = new URLSearchParams({
+      userId,
       role: user.role,
       token,
       signupcomplete: String(user.completedSignup),
       isApproved: String(user.isApproved),
     });
+
     const frontendUrl = "https://germanguestpost.com/en/sign-in";
 
     res.redirect(`${frontendUrl}?${queryParams.toString()}`);
@@ -128,14 +138,24 @@ authRouter.get(
   passport.authenticate("twitter", { session: false, failureRedirect: "http://localhost:3000/en/sign-up" }),
   async (req, res) => {
     const user = req.user as User;
-    const token = generateJWT(user.email, process.env.JWT_SECRET!, "24h");
+     const payload = {
+      userId: user.id,
+      email:user.email, // assuming your User has an id
+      role: user.role,
+      permissions: user.permissions  // add actual permissions if you have them
+    };
+
+    const token = generateJWT(payload, process.env.JWT_SECRET!, "24h");
+    const userId = user.id;
+
     const queryParams = new URLSearchParams({
+      userId,
       role: user.role,
       token,
       signupcomplete: String(user.completedSignup),
       isApproved: String(user.isApproved),
     });
-    const frontendUrl = "https://germanguestpost.com/en/sign-in";
+    const frontendUrl = "http://localhost:3000/en/sign-in";
 
     res.redirect(`${frontendUrl}?${queryParams.toString()}`);
   }
