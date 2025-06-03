@@ -7,6 +7,7 @@ import { generateReferralCode } from "../utils/generateReffralCode";
 import { DeepPartial } from "typeorm";
 import { User } from "../models/user";
 import { Others } from "../enums/others.enum";
+import { sendEmail } from "../utils/emails";
 
 passport.serializeUser((user: any, done) => {
   done(null, user.id);
@@ -96,6 +97,25 @@ passport.use(
               authProvider: Others.authProvider.GOOGLE,
             } as DeepPartial<User>)
           );
+
+          // Send email to admin about new user registration
+          if (process.env.ADMIN_EMAIL) {
+            await sendEmail({
+              from: process.env.NO_REPLY_EMAIL,
+              toEmail: process.env.ADMIN_EMAIL,
+              subject: "New User Registration via Google",
+              text: `A new user has registered via Google authentication:
+                
+Name: ${profile.displayName}
+Email: ${email}
+Role: ${role}
+Auth Provider: Google
+Registration Date: ${new Date().toISOString()}
+
+Please review the user in the admin panel.`,
+            });
+            console.log("Admin notification email sent successfully");
+          }
         }
         return done(null, user);
       } catch (err) {

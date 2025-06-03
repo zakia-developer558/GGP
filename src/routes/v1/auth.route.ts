@@ -57,7 +57,7 @@ authRouter.get(
 //callback
 authRouter.get(
   "/google/callback",
-  passport.authenticate("google", { session: false, failureRedirect: "http://localhost:3000/en/sign-in" }),
+  passport.authenticate("google", { session: false, failureRedirect: "https://germanguestpost.com/en/sign-in" }),
   async (req, res) => {
     const user = req.user as User;
       const payload = {
@@ -77,7 +77,7 @@ authRouter.get(
       signupcomplete: String(user.completedSignup),
       isApproved: String(user.isApproved),
     });
-    const frontendUrl = "http://localhost:3000/en/sign-in";
+    const frontendUrl = "https://germanguestpost.com/en/sign-in";
 
     res.redirect(`${frontendUrl}?${queryParams.toString()}`);
   }
