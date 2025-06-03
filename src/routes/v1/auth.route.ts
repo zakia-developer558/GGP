@@ -57,7 +57,7 @@ authRouter.get(
 //callback
 authRouter.get(
   "/google/callback",
-  passport.authenticate("google", { session: false, failureRedirect: "http://localhost:3000/en/sign-up" }),
+  passport.authenticate("google", { session: false, failureRedirect: "http://localhost:3000/en/sign-in" }),
   async (req, res) => {
     const user = req.user as User;
       const payload = {
