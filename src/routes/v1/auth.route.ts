@@ -68,8 +68,10 @@ authRouter.get(
     };
 
     const token = generateJWT(payload, process.env.JWT_SECRET!, "24h");
+    const userId = user.id;
 
     const queryParams = new URLSearchParams({
+      userId,
       role: user.role,
       token,
       signupcomplete: String(user.completedSignup),
