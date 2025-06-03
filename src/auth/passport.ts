@@ -68,7 +68,7 @@ passport.use(
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       callbackURL:
         process.env.NODE_ENV === "production"
-          ? "http://localhost:3000/v1/auth/google/callback"
+          ? "https://ggp-production.up.railway.app/v1/auth/google/callback"
           : "http://localhost:3000/v1/auth/google/callback",
       passReqToCallback: true,
     },
