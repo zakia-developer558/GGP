@@ -69,7 +69,7 @@ passport.use(
       callbackURL:
         process.env.NODE_ENV === "production"
           ? "https://ggp-production-5e27.up.railway.app/v1/auth/google/callback"
-          : "http://localhost:6543/v1/auth/google/callback",
+          : "https://ggp-production-5e27.up.railway.app/v1/auth/google/callback",
       passReqToCallback: true,
     },
     async (req, _accessToken, _refreshToken, profile, done) => {
