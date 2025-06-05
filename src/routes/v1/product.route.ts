@@ -38,7 +38,7 @@ const pool = new Pool({
   });
   
   // Google Sheets Sync Endpoint
-  productRouter.post("/sync-from-sheets", transformUser, authorizeRole(Others.role.MODERATOR), async (req, res) => {
+  productRouter.post("/sync-from-sheets", authenticateJWT, transformUser, authorizeRole(Others.role.MODERATOR), async (req, res) => {
     // Input validation
     if (!req.body || !Array.isArray(req.body.data)) {
       return res.status(400).json({ error: 'Invalid data format' });
