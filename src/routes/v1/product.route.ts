@@ -9,6 +9,7 @@ import { Product } from "../../models/product";
 import { ProductRepository } from "../../repositories";
 import { generateSitemaps } from "../../services/product.service";
 import { Pool } from "pg";
+import { User } from "../../models/user";
 
 const productRouter = Router();
 
@@ -43,7 +44,11 @@ const pool = new Pool({
       return res.status(400).json({ error: 'Invalid data format' });
     }
   
-    const user = req.user
+    const user = req.user as User; // Assertion
+if (!user?.id) {
+  return res.status(400).json({ error: 'User ID not found' });
+}
+
   
     const { sheet, row, data } = req.body;
     
@@ -75,12 +80,12 @@ const pool = new Pool({
       "adjustedPrice", 
       "isProductApprove", 
       "productStatus", 
-      "user"
+      "userId"
     )
     VALUES (
       $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23
     )
-    ON CONFLICT (website_url) 
+    ON CONFLICT ("websiteUrl") 
     DO UPDATE SET 
       "siteName" = EXCLUDED."siteName",
       "price" = EXCLUDED."price",
@@ -103,7 +108,7 @@ const pool = new Pool({
       "adjustedPrice" = EXCLUDED."adjustedPrice",
       "isProductApprove" = EXCLUDED."isProductApprove",
       "productStatus" = EXCLUDED."productStatus",
-      "user" = EXCLUDED."user"
+      "userId" = EXCLUDED."userId"
     RETURNING "websiteUrl"`;
   
         
@@ -130,7 +135,7 @@ const pool = new Pool({
     parseFloat(row[1]) * 1.25, // adjusted_price calculated from price
     true, // is_product_approve
     Others.productstatus.APPROVED, // product_status
-    user // user
+    user.id // user
   ]);
   
         
