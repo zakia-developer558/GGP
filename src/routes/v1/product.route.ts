@@ -120,17 +120,16 @@ if (!user?.id) {
     row[4]?.split(",").map((item: string) => item.trim()),//category
     row[5], // currency
     row[6], // niche
-    row[7], // approx_publication_time
-    row[8], // website_url
-    row[9] || "newPost", // site_type
-    row[10], // sample_link
-    row[11] || null, // live_time
-    row[12], // link_type directly from row
-    row[13], // max_link_allowed
-    row[14], // word_limit
-    parseInt(row[15], 10) || 0, // domain_authority
-    parseFloat(row[16]) || 0, // domain_ratings
-    parseInt(row[17], 10) || 0, // monthly_traffic
+    row[7], // website_url
+    row[8] || "newPost", // site_type
+    row[9], // sample_link
+    row[10] || null, // live_time
+    row[11], // link_type directly from row
+    row[12], // max_link_allowed
+    row[13], // word_limit
+    parseInt(row[14], 10) || 0, // domain_authority
+    parseFloat(row[15]) || 0, // domain_ratings
+    parseInt(row[16], 10) || 0, // monthly_traffic
     "2 days", // turn_around_time
     parseFloat(row[1]) * 1.25, // adjusted_price calculated from price
     true, // is_product_approve
