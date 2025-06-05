@@ -2,7 +2,7 @@ import { Router } from "express";
 import productController, { updatePublisherProductController } from "../../controllers/product.controller";
 import { Others } from "../../enums/others.enum";
 import { authorizeRole } from "../../middlewares/role.middleware";
-import { authenticateJWT } from "../../middlewares/auth.middleware";
+import { authenticateJWT, transformUser } from "../../middlewares/auth.middleware";
 import { SitemapStream, streamToPromise } from "sitemap";
 import { createGzip } from "zlib";
 import { Product } from "../../models/product";
@@ -38,7 +38,7 @@ const pool = new Pool({
   });
   
   // Google Sheets Sync Endpoint
-  productRouter.post("/sync-from-sheets", authenticateJWT, authorizeRole(Others.role.MODERATOR), async (req, res) => {
+  productRouter.post("/sync-from-sheets", transformUser, authorizeRole(Others.role.MODERATOR), async (req, res) => {
     // Input validation
     if (!req.body || !Array.isArray(req.body.data)) {
       return res.status(400).json({ error: 'Invalid data format' });

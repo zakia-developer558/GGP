@@ -132,3 +132,40 @@ export const authenticateCryptomus = (req:Request, res:Response, next:NextFuncti
 
   next();
 };
+
+export const transformUser = (req: Request, res: Response, next: NextFunction) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ 
+        success: false,
+        message: "User not authenticated" 
+      });
+    }
+
+    // Verify required properties exist
+    if (!req.user.userId) {
+      return res.status(400).json({
+        success: false,
+        message: "Malformed user data: missing userId"
+      });
+    }
+
+    // Transform the JWT payload into User entity format
+    req.user = {
+      id: req.user.userId,  // Map userId to id
+      email: req.user.email || null,
+      role: req.user.role || null,
+      permissions: req.user.permissions || []
+      // Add other properties as needed
+    };
+
+    next();
+  } catch (error:any) {
+    console.error('Error in transformUser middleware:', error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error during user transformation",
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+};
