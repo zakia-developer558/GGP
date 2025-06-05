@@ -53,7 +53,7 @@ const pool = new Pool({
         await client.query('BEGIN');
         
        const query = `
-    INSERT INTO products (
+    INSERT INTO Product (
       site_name, 
       price, 
       language, 
