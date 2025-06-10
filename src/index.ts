@@ -74,6 +74,7 @@ app.use(
       "https://germanguestpost.com",
       "http://94.130.162.216",
       "http://213.165.250.212:3001",
+      "http://localhost:5173"
     ],
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
