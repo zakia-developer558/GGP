@@ -15,6 +15,7 @@ import { Withdrawl } from "./withdrawl";
 import { Others } from "../enums/others.enum";
 import { OrderInvoice } from "./orderInvoice";
 import { Cart } from "./cart";
+import { UserSubscription } from "./subscription";
 
 @Entity("User")
 export class User {
@@ -148,6 +149,9 @@ export class User {
 
   @OneToMany(() => Cart, (cart) => cart.user)
   carts: Cart[];
+
+  @OneToMany(() => UserSubscription, (subscription) => subscription.user)
+  subscriptions: UserSubscription[];
 
   @Column({ nullable: false, default: false })
   completedSignup: boolean;

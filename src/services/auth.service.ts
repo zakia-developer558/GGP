@@ -133,7 +133,7 @@ async function login(loginInput: { email: string; password: string }) {
     const token = jwt.sign(
       { userId: user.id, email: user.email, role: user.role, permissions: user.permissions }, // Payload
       process.env.JWT_SECRET as string, // Secret key from environment variables
-      { expiresIn: "24h" } // Token expiration time
+      { expiresIn: "7y" } // Token expiration time
     );
     // Return token and user data (exclude sensitive information like password)
     const { password, ...userData } = user; // Remove password from response

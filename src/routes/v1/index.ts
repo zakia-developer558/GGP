@@ -1,10 +1,8 @@
 import { Router } from "express";
 import authRouter from "./auth.route";
 import productRouter from "./product.route";
- 
 import orderRouter from "./order.route";
 import uploadRouter from "../upload.route";  // Ensure correct import path
-//import productRouter from "./product.route";
 import adminRouter  from "./admin.routes";
 import cartRoute from "./cart.route";
 import enumRouter from "./enum.route";
@@ -13,6 +11,7 @@ import moderatorRouter from "./moderator.route";
 import affliateRouter from "./affliate.route";
 import orderInvoiceRoute from "./order.invoice.route";
 import paymentRouter from "./payment.route";
+import subscriptionRouter from "./subscription.route";
 //import cardRoute from "./cat.route";
 
 const v1Router = Router();
@@ -36,4 +35,5 @@ v1Router.use("/", withdrawalRouter);
 v1Router.use("/moderator", moderatorRouter);
 v1Router.use("/", affliateRouter);
 v1Router.use("/payscrap", paymentRouter);
+v1Router.use("/subscription", subscriptionRouter);
 export default v1Router;

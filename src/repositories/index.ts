@@ -7,6 +7,7 @@ import { Invoice } from "../models/invoices";
 import { Payment } from "../models/payments";
 import { OrderInvoice } from "../models/orderInvoice";
 import { Cart } from "../models/cart";
+import { SubscriptionPlan, UserSubscription } from "../models/subscription";
 
 export const UserRepository = PostgresDataSource.getRepository(User);
 export const ProductRepository = PostgresDataSource.getRepository(Product);
@@ -16,3 +17,5 @@ export const InvoiceRepository = PostgresDataSource.getRepository(Invoice);
 export const PaymentRepository = PostgresDataSource.getRepository(Payment);
 export const OrderInvoiceRepository = PostgresDataSource.getRepository(OrderInvoice);
 export const CartRepository = PostgresDataSource.getRepository(Cart);
+export const SubscriptionPlanRepository = PostgresDataSource.getRepository(SubscriptionPlan);
+export const UserSubscriptionRepository = PostgresDataSource.getRepository(UserSubscription);

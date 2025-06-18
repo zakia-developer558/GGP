@@ -124,7 +124,7 @@ if (!user?.id) {
     row[8] || "newPost", // site_type
     row[9], // sample_link
     row[10] || null, // live_time
-    row[11], // link_type directly from row
+    row[11], // link_type 
     row[12], // max_link_allowed
     row[13], // word_limit
     parseInt(row[14], 10) || 0, // domain_authority
