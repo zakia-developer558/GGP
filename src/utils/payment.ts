@@ -13,7 +13,8 @@ export const processPayment = async (
   currency: string,
   network: string,
   to_currency: string,
-  url_callback?: string
+  url_callback?: string,
+  url_success?: string
 ): Promise<PaymentResponse> => {
   try {
     const paymentDetail: PaymentDetails = {
@@ -22,7 +23,7 @@ export const processPayment = async (
       currency: currency.toString(),
       network: network,
       to_currency: to_currency,
-      url_success: `${process.env.PAYMENT_FRONTEND_URL}/thankyou?orderNumber=${orderNumber}`,
+      url_success:url_success ||`${process.env.PAYMENT_FRONTEND_URL}/thankyou?orderNumber=${orderNumber}`,
       url_return: `${process.env.PAYMENT_FRONTEND_URL}`,
       url_callback: url_callback || "https://ggp-production-5e27.up.railway.app/v1/order/cryptomus-callback",
     };

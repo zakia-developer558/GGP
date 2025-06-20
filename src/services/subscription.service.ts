@@ -60,7 +60,7 @@ export const purchaseSubscription = async (
       network,
       to_currency,
       `https://ggp-production-5e27.up.railway.app/v1/subscription/payment-callback`,
-      `${process.env.PAYMENT_FRONTEND_URL}/thanku`
+      `https://germanguestpost.com/thanku`
     );
 
     paymentDetails = {
