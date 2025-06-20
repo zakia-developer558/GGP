@@ -12,7 +12,8 @@ export const processPayment = async (
   amount: number,
   currency: string,
   network: string,
-  to_currency: string
+  to_currency: string,
+  url_callback?: string
 ): Promise<PaymentResponse> => {
   try {
     const paymentDetail: PaymentDetails = {
@@ -23,7 +24,7 @@ export const processPayment = async (
       to_currency: to_currency,
       url_success: `${process.env.PAYMENT_FRONTEND_URL}/thankyou?orderNumber=${orderNumber}`,
       url_return: `${process.env.PAYMENT_FRONTEND_URL}`,
-      url_callback: "https://newbackend.crective.com/v1/order/cryptomus-callback",
+      url_callback: url_callback || "https://newbackend.crective.com/v1/order/cryptomus-callback",
     };
 
     const response = await cryptomus.createPayment(paymentDetail);
