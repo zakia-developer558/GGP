@@ -300,6 +300,14 @@ const createInitialPlans = async () => {
   }
 };
 
+const getAllSubscribedUsers = async () => {
+  // Fetch all subscriptions with user and plan details
+  return await UserSubscriptionRepository.find({
+    relations: ["user", "plan"],
+    order: { createdAt: "DESC" },
+  });
+};
+
 export default {
   getPlans,
   purchaseSubscription,
@@ -309,4 +317,5 @@ export default {
   updatePlan,
   deletePlan,
   createInitialPlans,
+  getAllSubscribedUsers
 }; 

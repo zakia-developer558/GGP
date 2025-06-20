@@ -146,6 +146,18 @@ const deletePlan = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const getAllSubscribedUsers = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const subscriptions = await subscriptionService.getAllSubscribedUsers();
+    res.status(200).json({
+      message: "Fetched all subscribed users successfully",
+      data: subscriptions,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const handlePaymentCallback = asyncWrapper(async (req: Request, res: Response) => {
   try {
     const { uuid, payment_status, txid } = req.body;
@@ -185,4 +197,5 @@ export default {
   updatePlan,
   deletePlan,
   handlePaymentCallback,
+  getAllSubscribedUsers,
 }; 

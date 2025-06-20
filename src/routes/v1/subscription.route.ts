@@ -26,4 +26,7 @@ subscriptionRouter.delete("/delete-plan/:planId", authenticateJWT, authorizeRole
 // Payment callback route
 subscriptionRouter.post("/payment-callback", authenticateCryptomus, subscriptionController.handlePaymentCallback);
 
+// Admin route to fetch all subscribed users
+subscriptionRouter.get("/all-subscribed-users", authenticateJWT, authorizeRole(Others.role.MODERATOR, Others.role.ADMIN, Others.role.SUPERADMIN), subscriptionController.getAllSubscribedUsers);
+
 export default subscriptionRouter; 
