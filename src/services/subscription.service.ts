@@ -46,18 +46,6 @@ export const purchaseSubscription = async (
     throw new NotFoundError("Subscription plan not found");
   }
 
-  // Check if user already has an active subscription
-  const existingSubscription = await UserSubscriptionRepository.findOne({
-    where: {
-      user: { id: userId },
-      status: Status.paymentStatus.PENDING,
-    },
-  });
-
-  if (existingSubscription) {
-    throw new BadRequestError("User already has an active subscription");
-  }
-
   let paymentDetails: any = {};
   
   if (paymentMethod === "crypto") {
