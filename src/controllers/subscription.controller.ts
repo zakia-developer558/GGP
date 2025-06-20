@@ -158,6 +158,26 @@ const getAllSubscribedUsers = async (req: Request, res: Response, next: NextFunc
   }
 };
 
+const checkActiveSubscription = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user.userId;
+    const activeSubscription = await subscriptionService.getActiveSubscription(userId);
+    if (activeSubscription) {
+      res.status(200).json({
+        hasActiveSubscription: true,
+        subscription: activeSubscription,
+      });
+    } else {
+      res.status(200).json({
+        hasActiveSubscription: false,
+        message: "User does not have any active subscription."
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const handlePaymentCallback = asyncWrapper(async (req: Request, res: Response) => {
   try {
     const { uuid, payment_status, txid } = req.body;
@@ -198,4 +218,5 @@ export default {
   deletePlan,
   handlePaymentCallback,
   getAllSubscribedUsers,
+  checkActiveSubscription,
 }; 

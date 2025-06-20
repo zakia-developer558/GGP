@@ -296,6 +296,17 @@ const getAllSubscribedUsers = async () => {
   });
 };
 
+const getActiveSubscription = async (userId: string) => {
+  return await UserSubscriptionRepository.findOne({
+    where: {
+      user: { id: userId },
+      status: "active",
+    },
+    relations: ["plan"],
+    order: { createdAt: "DESC" },
+  });
+};
+
 export default {
   getPlans,
   purchaseSubscription,
@@ -305,5 +316,6 @@ export default {
   updatePlan,
   deletePlan,
   createInitialPlans,
-  getAllSubscribedUsers
+  getAllSubscribedUsers,
+  getActiveSubscription,
 }; 

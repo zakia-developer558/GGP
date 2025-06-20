@@ -29,4 +29,7 @@ subscriptionRouter.post("/payment-callback", authenticateCryptomus, subscription
 // Admin route to fetch all subscribed users
 subscriptionRouter.get("/all-subscribed-users", authenticateJWT, authorizeRole(Others.role.MODERATOR, Others.role.ADMIN, Others.role.SUPERADMIN), subscriptionController.getAllSubscribedUsers);
 
+// Route to check if the logged-in user has an active subscription
+subscriptionRouter.get("/check-active", authenticateJWT, subscriptionController.checkActiveSubscription);
+
 export default subscriptionRouter; 
