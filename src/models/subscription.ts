@@ -63,6 +63,9 @@ export class UserSubscription {
   })
   status: "active" | "expired" | "cancelled" | "pending";
 
+  @Column({ type: "varchar", length: 20, nullable: true }) // 'crypto' or 'payoneer'
+  paymentMethod: string;
+
   @Column({ nullable: true })
   paymentId: string; // Store payment reference (e.g., Cryptomus or Payoneer ID)
 

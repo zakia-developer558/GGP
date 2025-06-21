@@ -234,6 +234,16 @@ export const handlePaymentCallback = asyncWrapper(async (req: Request, res: Resp
   }
 });
 
+const activatePayoneerSubscription = asyncWrapper(async (req: Request, res: Response) => {
+  const { subscriptionId } = req.params;
+  const subscription = await subscriptionService.activatePayoneerSubscription(subscriptionId);
+
+  res.status(200).json({
+    message: "Subscription for Payoneer payment activated successfully",
+    data: subscription,
+  });
+});
+
 export default {
   getPlans,
   purchaseSubscription,
@@ -245,4 +255,5 @@ export default {
   handlePaymentCallback,
   getAllSubscribedUsers,
   checkActiveSubscription,
+  activatePayoneerSubscription,
 }; 

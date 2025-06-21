@@ -3,7 +3,7 @@ import { BadRequestError } from "../errors/badRequest.error";
 import { NotFoundError } from "../errors/notFound.error";
 import { SubscriptionPlan, UserSubscription } from "../models/subscription";
 import { User } from "../models/user";
-import { sendEmail, sendSubscriptionCancellationEmails } from "../utils/emails";
+import { sendEmail, sendSubscriptionCancellationEmails, sendSubscriptionActivationEmails } from "../utils/emails";
 import { processPayment } from "../utils/payment";
 import { Status } from "../enums/status.enum";
 import { addMonths, addYears } from "date-fns";
@@ -86,20 +86,24 @@ export const purchaseSubscription = async (
     };
   }
 
-  const subscription = UserSubscriptionRepository.create({
-    user: { id: userId } as User,
-    plan: { id: planId } as SubscriptionPlan,
-    startDate: new Date(),
-    endDate: calculateEndDate(plan.duration),
-    status: Status.paymentStatus.PENDING,
+  const startDate = new Date();
+  const endDate = calculateEndDate(plan.duration);
+
+  const newSubscription = UserSubscriptionRepository.create({
+    user: { id: userId },
+    plan: { id: planId },
+    startDate,
+    endDate,
+    status: "pending", // Initially pending until payment is confirmed
+    paymentMethod,
     paymentId: paymentDetails.paymentId,
     paymentStatus: paymentDetails.paymentStatus,
   });
 
-  await UserSubscriptionRepository.save(subscription);
+  await UserSubscriptionRepository.save(newSubscription);
 
   return {
-    subscription,
+    subscription: newSubscription,
     paymentDetails: paymentMethod === "crypto" ? {
       url: paymentDetails.paymentUrl,
       address: paymentDetails.paymentAddress,
@@ -314,6 +318,40 @@ const getActiveSubscription = async (userId: string) => {
   });
 };
 
+const activatePayoneerSubscription = async (subscriptionId: string) => {
+  const subscription = await UserSubscriptionRepository.findOne({
+    where: { id: subscriptionId },
+    relations: ["user", "plan"],
+  });
+
+  if (!subscription) {
+    throw new NotFoundError("Subscription not found");
+  }
+
+  if (subscription.paymentMethod !== "payoneer") {
+    throw new BadRequestError("This activation is only for Payoneer subscriptions.");
+  }
+
+  if (subscription.status !== "pending") {
+    throw new BadRequestError(`Subscription status is already '${subscription.status}'. Only pending subscriptions can be activated.`);
+  }
+
+  subscription.status = "active";
+  await UserSubscriptionRepository.save(subscription);
+
+  // Send activation emails
+  const userName = subscription.user.firstName || subscription.user.email;
+  await sendSubscriptionActivationEmails(
+    subscription.user.email,
+    userName,
+    subscription.plan.name,
+    subscription.startDate,
+    subscription.endDate
+  );
+  
+  return subscription;
+};
+
 export default {
   getPlans,
   purchaseSubscription,
@@ -325,4 +363,5 @@ export default {
   createInitialPlans,
   getAllSubscribedUsers,
   getActiveSubscription,
+  activatePayoneerSubscription,
 }; 

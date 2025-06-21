@@ -29,6 +29,14 @@ subscriptionRouter.post("/payment-callback", subscriptionController.handlePaymen
 // Admin route to fetch all active subscribed users
 subscriptionRouter.get("/all-subscribed-users", authenticateJWT, authorizeRole(Others.role.MODERATOR, Others.role.ADMIN, Others.role.SUPERADMIN), subscriptionController.getAllSubscribedUsers);
 
+// Admin route to manually activate a Payoneer subscription
+subscriptionRouter.patch(
+  "/activate-payoneer/:subscriptionId",
+  authenticateJWT,
+  authorizeRole(Others.role.ADMIN, Others.role.SUPERADMIN, Others.role.MODERATOR),
+  subscriptionController.activatePayoneerSubscription
+);
+
 // Route to check if the logged-in user has an active subscription
 subscriptionRouter.get("/check-active", authenticateJWT, subscriptionController.checkActiveSubscription);
 
