@@ -337,6 +337,7 @@ const activatePayoneerSubscription = async (subscriptionId: string) => {
   }
 
   subscription.status = "active";
+  subscription.paymentStatus = "paid";
   await UserSubscriptionRepository.save(subscription);
 
   // Send activation emails
