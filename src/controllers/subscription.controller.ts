@@ -4,6 +4,7 @@ import { BadRequestError, NotFoundError } from "../utils/errors";
 import { asyncWrapper } from "../utils/wrapperFunctionTryCatch";
 import { subscriptionPlanSchema, purchaseSubscriptionSchema, updatePlanSchema } from "../validators/subscription.validation";
 import { UserSubscriptionRepository } from "../repositories";
+import { sendSubscriptionActivationEmails, sendSubscriptionCancellationEmails } from "../utils/emails";
 
 const getPlans = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -182,9 +183,10 @@ export const handlePaymentCallback = asyncWrapper(async (req: Request, res: Resp
   try {
     const { uuid, payment_status, txid } = req.body;
 
-    // Find subscription by payment ID
+    // Find subscription by payment ID with user and plan relations
     const subscription = await UserSubscriptionRepository.findOne({
-      where: { paymentId: uuid }
+      where: { paymentId: uuid },
+      relations: ["user", "plan"]
     });
 
     if (!subscription) {
@@ -194,12 +196,36 @@ export const handlePaymentCallback = asyncWrapper(async (req: Request, res: Resp
     // Update subscription status based on payment status
     if (payment_status.toLowerCase() === "paid") {
       subscription.status = "active";
+      
+      // Save updated subscription
+      await UserSubscriptionRepository.save(subscription);
+      
+      // Send activation emails
+      const userName = subscription.user.firstName || subscription.user.email;
+      await sendSubscriptionActivationEmails(
+        subscription.user.email,
+        userName,
+        subscription.plan.name,
+        subscription.startDate,
+        subscription.endDate
+      );
+      
+      console.log(`✅ Subscription activated for user ${subscription.user.email} with plan ${subscription.plan.name}`);
     } else if (payment_status.toLowerCase() === "canceled" || payment_status.toLowerCase() === "cancelled") {
       subscription.status = "cancelled";
+      await UserSubscriptionRepository.save(subscription);
+      
+      // Send cancellation emails
+      const userName = subscription.user.firstName || subscription.user.email;
+      await sendSubscriptionCancellationEmails(
+        subscription.user.email,
+        userName,
+        subscription.plan.name,
+        subscription.endDate
+      );
+      
+      console.log(`❌ Subscription cancelled for user ${subscription.user.email}`);
     }
-
-    // Save updated subscription
-    await UserSubscriptionRepository.save(subscription);
 
     res.json({ success: true });
   } catch (error: any) {

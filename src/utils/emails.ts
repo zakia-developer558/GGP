@@ -129,3 +129,142 @@ export const sendAdminEmailForPendingOrder = async (options: EmailOptions, role:
     }
   }
 };
+
+export const sendSubscriptionActivationEmails = async (
+  userEmail: string,
+  userName: string,
+  planName: string,
+  startDate: Date,
+  endDate: Date
+): Promise<void> => {
+  try {
+    // Send email to user
+    const userSubject = "Your Subscription is Now Active! 🎉";
+    const userText = `Dear ${userName},
+
+Congratulations! Your subscription to ${planName} is now active.
+
+Subscription Details:
+- Plan: ${planName}
+- Start Date: ${startDate.toLocaleDateString()}
+- End Date: ${endDate.toLocaleDateString()}
+
+You now have access to all the premium features included in your subscription. If you have any questions or need assistance, please don't hesitate to contact our support team.
+
+Thank you for choosing our service!
+
+Best regards,
+The Team`;
+
+    await sendEmail({
+      toEmail: userEmail,
+      toName: userName,
+      subject: userSubject,
+      text: userText,
+      from: process.env.NO_REPLY_EMAIL,
+    });
+
+    // Send email to admin
+    const adminEmail = process.env.ADMIN_EMAIL;
+    if (adminEmail) {
+      const adminSubject = "New Active Subscription - User Notification";
+      const adminText = `A new subscription has been activated.
+
+User Details:
+- Email: ${userEmail}
+- Name: ${userName}
+
+Subscription Details:
+- Plan: ${planName}
+- Start Date: ${startDate.toLocaleDateString()}
+- End Date: ${endDate.toLocaleDateString()}
+- Activation Time: ${new Date().toLocaleString()}
+
+This is an automated notification.`;
+
+      await sendEmail({
+        toEmail: adminEmail,
+        toName: "Admin",
+        subject: adminSubject,
+        text: adminText,
+        from: process.env.NO_REPLY_EMAIL,
+      });
+
+      console.log(`✅ Subscription activation emails sent to user (${userEmail}) and admin (${adminEmail})`);
+    } else {
+      console.log(`⚠️  ADMIN_EMAIL not configured. Only sent email to user (${userEmail})`);
+    }
+  } catch (error) {
+    console.error("❌ Error sending subscription activation emails:", error);
+    // Don't throw error to avoid breaking the payment callback
+  }
+};
+
+export const sendSubscriptionCancellationEmails = async (
+  userEmail: string,
+  userName: string,
+  planName: string,
+  endDate: Date
+): Promise<void> => {
+  try {
+    // Send email to user
+    const userSubject = "Your Subscription Has Been Cancelled";
+    const userText = `Dear ${userName},
+
+Your subscription to ${planName} has been cancelled.
+
+Subscription Details:
+- Plan: ${planName}
+- Cancellation Date: ${new Date().toLocaleDateString()}
+- Access until: ${endDate.toLocaleDateString()}
+
+You will continue to have access to your subscription features until ${endDate.toLocaleDateString()}. After that, your access will be limited to basic features.
+
+If you have any questions or would like to reactivate your subscription, please contact our support team.
+
+Thank you for being our customer!
+
+Best regards,
+The Team`;
+
+    await sendEmail({
+      toEmail: userEmail,
+      toName: userName,
+      subject: userSubject,
+      text: userText,
+    });
+
+    // Send email to admin
+    const adminEmail = process.env.ADMIN_EMAIL;
+    if (adminEmail) {
+      const adminSubject = "Subscription Cancelled - User Notification";
+      const adminText = `A subscription has been cancelled.
+
+User Details:
+- Email: ${userEmail}
+- Name: ${userName}
+
+Subscription Details:
+- Plan: ${planName}
+- Cancellation Date: ${new Date().toLocaleDateString()}
+- Access until: ${endDate.toLocaleDateString()}
+
+This is an automated notification.`;
+
+      await sendEmail({
+        toEmail: adminEmail,
+        toName: "Admin",
+        subject: adminSubject,
+        text: adminText,
+        from: process.env.NO_REPLY_EMAIL,
+      });
+
+      console.log(`✅ Subscription cancellation emails sent to user (${userEmail}) and admin (${adminEmail})`);
+    } else {
+      console.log(`⚠️  ADMIN_EMAIL not configured. Only sent cancellation email to user (${userEmail})`);
+    }
+  } catch (error) {
+    console.error("❌ Error sending subscription cancellation emails:", error);
+    // Don't throw error to avoid breaking the payment callback
+  }
+};

@@ -3,7 +3,7 @@ import { BadRequestError } from "../errors/badRequest.error";
 import { NotFoundError } from "../errors/notFound.error";
 import { SubscriptionPlan, UserSubscription } from "../models/subscription";
 import { User } from "../models/user";
-import { sendEmail } from "../utils/emails";
+import { sendEmail, sendSubscriptionCancellationEmails } from "../utils/emails";
 import { processPayment } from "../utils/payment";
 import { Status } from "../enums/status.enum";
 import { addMonths, addYears } from "date-fns";
@@ -150,12 +150,14 @@ const cancelSubscription = async (userId: string) => {
     subscription.status = "cancelled";
     await UserSubscriptionRepository.save(subscription);
 
-    // Send email notification
-    await sendEmail({
-      toEmail: subscription.user.email,
-      subject: "Subscription Cancelled",
-      text: `Your subscription to ${subscription.plan.name} has been cancelled.`,
-    });
+    // Send comprehensive cancellation emails to user and admin
+    const userName = subscription.user.firstName || subscription.user.email;
+    await sendSubscriptionCancellationEmails(
+      subscription.user.email,
+      userName,
+      subscription.plan.name,
+      subscription.endDate
+    );
 
     return subscription;
   } catch (error) {
