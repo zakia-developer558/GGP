@@ -291,8 +291,11 @@ const createInitialPlans = async () => {
 };
 
 const getAllSubscribedUsers = async () => {
-  // Fetch all subscriptions with user and plan details
+  // Fetch only active subscriptions with user and plan details
   return await UserSubscriptionRepository.find({
+    where: {
+      status: "active"
+    },
     relations: ["user", "plan"],
     order: { createdAt: "DESC" },
   });

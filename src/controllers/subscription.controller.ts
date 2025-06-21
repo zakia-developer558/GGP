@@ -150,7 +150,7 @@ const getAllSubscribedUsers = async (req: Request, res: Response, next: NextFunc
   try {
     const subscriptions = await subscriptionService.getAllSubscribedUsers();
     res.status(200).json({
-      message: "Fetched all subscribed users successfully",
+      message: "Fetched all active subscribed users successfully",
       data: subscriptions,
     });
   } catch (error) {
