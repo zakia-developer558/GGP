@@ -244,6 +244,15 @@ const activatePayoneerSubscription = asyncWrapper(async (req: Request, res: Resp
   });
 });
 
+const getPendingPayoneerSubscriptions = asyncWrapper(async (req: Request, res: Response) => {
+  const subscriptions = await subscriptionService.getPendingPayoneerSubscriptions();
+  res.status(200).json({
+    message: "Fetched all pending Payoneer subscriptions successfully",
+    count: subscriptions.length,
+    data: subscriptions,
+  });
+});
+
 export default {
   getPlans,
   purchaseSubscription,
@@ -256,4 +265,5 @@ export default {
   getAllSubscribedUsers,
   checkActiveSubscription,
   activatePayoneerSubscription,
+  getPendingPayoneerSubscriptions,
 }; 

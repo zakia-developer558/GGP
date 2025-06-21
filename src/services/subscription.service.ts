@@ -352,6 +352,17 @@ const activatePayoneerSubscription = async (subscriptionId: string) => {
   return subscription;
 };
 
+const getPendingPayoneerSubscriptions = async () => {
+  return await UserSubscriptionRepository.find({
+    where: {
+      status: "pending",
+      paymentMethod: "payoneer",
+    },
+    relations: ["user", "plan"],
+    order: { createdAt: "ASC" }, // Oldest first
+  });
+};
+
 export default {
   getPlans,
   purchaseSubscription,
@@ -364,4 +375,5 @@ export default {
   getAllSubscribedUsers,
   getActiveSubscription,
   activatePayoneerSubscription,
+  getPendingPayoneerSubscriptions,
 }; 

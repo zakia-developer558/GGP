@@ -37,6 +37,14 @@ subscriptionRouter.patch(
   subscriptionController.activatePayoneerSubscription
 );
 
+// Admin route to get all pending Payoneer subscriptions
+subscriptionRouter.get(
+  "/pending-payoneer",
+  authenticateJWT,
+  authorizeRole(Others.role.ADMIN, Others.role.SUPERADMIN, Others.role.MODERATOR),
+  subscriptionController.getPendingPayoneerSubscriptions
+);
+
 // Route to check if the logged-in user has an active subscription
 subscriptionRouter.get("/check-active", authenticateJWT, subscriptionController.checkActiveSubscription);
 
