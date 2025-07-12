@@ -25,7 +25,7 @@ export const processPayment = async (
       to_currency: to_currency,
       url_success:url_success ||`${process.env.PAYMENT_FRONTEND_URL}/thankyou?orderNumber=${orderNumber}`,
       url_return: `${process.env.PAYMENT_FRONTEND_URL}`,
-      url_callback: url_callback || "https://ggp-production-5e27.up.railway.app/v1/order/cryptomus-callback",
+      url_callback: url_callback || "https://ggp-production-3688.up.railway.app/order/cryptomus-callback",
     };
 
     const response = await cryptomus.createPayment(paymentDetail);

@@ -47,7 +47,7 @@ export const purchaseSubscription = async (
   }
 
   let paymentDetails: any = {};
-  
+  //resoling error
   if (paymentMethod === "crypto") {
     if (!network || !to_currency) {
       throw new BadRequestError("Network and to_currency are required for crypto payments");
@@ -59,7 +59,7 @@ export const purchaseSubscription = async (
       "USD",
       network,
       to_currency,
-      `https://ggp-production-5e27.up.railway.app/v1/subscription/payment-callback`,
+      `https://ggp-production-3688.up.railway.app/v1/subscription/payment-callback`,
       `https://germanguestpost.com/thanku`
     );
 
